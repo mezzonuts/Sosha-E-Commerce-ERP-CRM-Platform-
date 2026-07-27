@@ -1,15 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-    console.log("Login:", { email, password });
+    setError("");
+    setLoading(true);
+
+    try {
+      await login(email, password);
+      router.push("/");
+    } catch (err) {
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -18,6 +33,11 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
           Login
         </h1>
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -47,9 +67,10 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
