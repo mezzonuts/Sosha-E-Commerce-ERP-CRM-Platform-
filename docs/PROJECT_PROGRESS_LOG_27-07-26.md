@@ -274,7 +274,84 @@ Status: Completed
 
 
 
-# 3.5 Frontend Implementation Progress
+## Unit Tests
+
+Status: Completed
+
+Test framework:
+
+- pytest
+- pytest-asyncio
+- httpx TestClient
+- SQLite in-memory database for tests
+
+
+Test coverage:
+
+- Model tests: User, Customer, Category, Product, Order, OrderItem
+- Router tests: auth, products, customers, orders, inventory, payments, shipments, crm, reporting
+- Root and health endpoint tests
+- Total: 32 tests passing
+
+
+Test structure:
+
+```
+tests/
+  conftest.py
+  models/
+    test_user.py
+  routers/
+    test_api.py
+  test_sanitization.py
+  test_rate_limiting.py
+```
+
+
+
+## Input Sanitization
+
+Status: Completed
+
+Library:
+
+- bleach for HTML sanitization
+
+
+Implementation:
+
+- `app/core/sanitization.py` created
+- `sanitize_html()` - removes dangerous HTML tags and attributes
+- `sanitize_string()` - sanitizes and truncates strings
+- `sanitize_dict()` - sanitizes specific fields in dictionaries
+- Allowed tags: p, br, strong, em, u, a, ul, ol, li, h1-h6, blockquote, code, pre
+- Dangerous attributes like javascript: URLs are removed
+
+
+
+## Rate Limiting
+
+Status: Completed
+
+Library:
+
+- slowapi with limits
+
+
+Implementation:
+
+- `app/core/rate_limiter.py` created
+- Global rate limiting middleware applied to all routes
+- Default limit: 60 requests/minute for most endpoints
+- Login endpoint: 5 requests/minute
+- Product creation: 10 requests/minute
+- Order creation: 10 requests/minute
+- Order status update: 20 requests/minute
+- Reporting endpoints: 30 requests/minute
+
+
+
+---
 
 
 ## Next.js Setup

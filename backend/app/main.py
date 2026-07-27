@@ -1,20 +1,22 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 from app.database.session import engine
 from app.models.user import Base
 from app.routers import auth, products, customers, orders, mobile, inventory, payments, shipments, crm, reporting
-
-try:
-    Base.metadata.create_all(bind=engine)
-except Exception:
-    pass
+from app.core.rate_limiter import limiter
+from slowapi import _rate_limit_exceeded_handler
 
 app = FastAPI(
     title="Sosha E-Commerce ERP CRM API",
     version="0.1.0",
     description="Integrated E-Commerce, ERP, and CRM Platform API"
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
