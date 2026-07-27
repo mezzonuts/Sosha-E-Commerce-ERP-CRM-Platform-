@@ -197,6 +197,11 @@ Routers implemented:
 - customers.py: GET /api/customers
 - orders.py: POST /api/orders, GET /api/orders/{id}, PUT /api/orders/{id}/status
 - mobile.py: POST /api/mobile/auth, GET /api/mobile/products, GET /api/mobile/orders
+- inventory.py: GET /api/inventory, POST /api/inventory, GET /api/inventory/product/{product_id}
+- payments.py: GET /api/payments, POST /api/payments, GET /api/payments/order/{order_id}
+- shipments.py: GET /api/shipments, POST /api/shipments, GET /api/shipments/order/{order_id}
+- crm.py: GET /api/crm, POST /api/crm, GET /api/crm/customer/{customer_id}
+- reporting.py: GET /api/reporting/sales, GET /api/reporting/products, GET /api/reporting/customers, GET /api/reporting/orders, GET /api/reporting/payments
 
 
 
@@ -244,6 +249,28 @@ Status: Completed
 - Health endpoint `/health` returns status ok
 - Swagger UI available at `/docs`
 - OpenAPI JSON available at `/openapi.json`
+
+
+
+## Seed Data
+
+Status: Completed
+
+- Seed script created at `app/core/seed.py`
+- Creates default users: admin, manager, warehouse, customer
+- Creates sample categories: Electronics, Clothing, Food & Beverage, Home & Living
+- Creates sample products with categories
+- Script can be run with: `python -m app.core.seed`
+
+
+
+## Global Exception Handling
+
+Status: Completed
+
+- Custom 404 exception handler with path detail
+- Custom 500 exception handler with exception type
+- JSON error responses for better client integration
 
 
 
@@ -311,21 +338,16 @@ Branch:
 
 1. Start PostgreSQL container: `docker-compose up -d` from infrastructure/
 2. Run database migration: `uv run alembic upgrade head`
-3. Test API endpoints with database connection
-4. Create seed data script for initial categories and admin user
+3. Run seed data: `python -m app.core.seed`
+4. Test API endpoints with database connection
+5. Add pagination to list endpoints
 
 
 ## Short Term
 
-1. Implement remaining routers:
-   - inventory.py
-   - payments.py
-   - shipments.py
-   - crm.py
-   - reporting.py
-2. Add request/response validation and error handling
-3. Implement pagination for list endpoints
-4. Add unit tests for models and routers
+1. Add request/response validation and error handling improvements
+2. Add unit tests for models and routers
+3. Implement input sanitization and rate limiting
 
 
 ## Medium Term

@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.session import engine
 from app.models.user import Base
-from app.routers import auth, products, customers, orders, mobile
+from app.routers import auth, products, customers, orders, mobile, inventory, payments, shipments, crm, reporting
 
 try:
     Base.metadata.create_all(bind=engine)
@@ -28,6 +29,25 @@ app.include_router(products.router)
 app.include_router(customers.router)
 app.include_router(orders.router)
 app.include_router(mobile.router)
+app.include_router(inventory.router)
+app.include_router(payments.router)
+app.include_router(shipments.router)
+app.include_router(crm.router)
+app.include_router(reporting.router)
+
+@app.exception_handler(404)
+async def not_found_exception_handler(request: Request, exc):
+    return JSONResponse(
+        status_code=404,
+        content={"detail": "The requested resource was not found", "path": request.url.path},
+    )
+
+@app.exception_handler(500)
+async def internal_exception_handler(request: Request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error", "type": type(exc).__name__},
+    )
 
 @app.get("/")
 def root():
