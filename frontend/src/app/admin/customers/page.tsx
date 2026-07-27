@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import AdminLayout from "@/app/admin/layout";
 import { api } from "@/lib/api";
 import { Customer } from "@/types";
+import Link from "next/link";
 
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -56,6 +57,9 @@ export default function AdminCustomersPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Created At
                   </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -75,6 +79,14 @@ export default function AdminCustomersPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {new Date(customer.created_at).toLocaleDateString("id-ID")}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <Link
+                        href={`/admin/customers/${customer.id}`}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        View
+                      </Link>
                     </td>
                   </tr>
                 ))}

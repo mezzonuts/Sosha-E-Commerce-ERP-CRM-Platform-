@@ -3,6 +3,19 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/app/admin/layout";
 import { api } from "@/lib/api";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar, Pie, Doughnut } from "react-chartjs-2";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -54,6 +67,90 @@ export default function AdminReportsPage() {
       </AdminLayout>
     );
   }
+
+  const orderStatusData = {
+    labels: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+    datasets: [
+      {
+        label: "Orders",
+        data: [
+          orderReport?.pending || 0,
+          orderReport?.processing || 0,
+          orderReport?.shipped || 0,
+          orderReport?.delivered || 0,
+          orderReport?.cancelled || 0,
+        ],
+        backgroundColor: [
+          "rgba(251, 191, 36, 0.8)",
+          "rgba(59, 130, 246, 0.8)",
+          "rgba(147, 51, 234, 0.8)",
+          "rgba(34, 197, 94, 0.8)",
+          "rgba(239, 68, 68, 0.8)",
+        ],
+        borderColor: [
+          "rgb(251, 191, 36)",
+          "rgb(59, 130, 246)",
+          "rgb(147, 51, 234)",
+          "rgb(34, 197, 94)",
+          "rgb(239, 68, 68)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const paymentStatusData = {
+    labels: ["Paid", "Pending", "Failed"],
+    datasets: [
+      {
+        label: "Payments",
+        data: [
+          paymentReport?.paid || 0,
+          paymentReport?.pending || 0,
+          paymentReport?.failed || 0,
+        ],
+        backgroundColor: [
+          "rgba(34, 197, 94, 0.8)",
+          "rgba(251, 191, 36, 0.8)",
+          "rgba(239, 68, 68, 0.8)",
+        ],
+        borderColor: [
+          "rgb(34, 197, 94)",
+          "rgb(251, 191, 36)",
+          "rgb(239, 68, 68)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const productStatusData = {
+    labels: ["Active", "Low Stock"],
+    datasets: [
+      {
+        label: "Products",
+        data: [productReport?.active_products || 0, productReport?.low_stock_products || 0],
+        backgroundColor: [
+          "rgba(34, 197, 94, 0.8)",
+          "rgba(239, 68, 68, 0.8)",
+        ],
+        borderColor: [
+          "rgb(34, 197, 94)",
+          "rgb(239, 68, 68)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+      },
+    },
+  };
 
   return (
     <AdminLayout>
@@ -186,6 +283,23 @@ export default function AdminReportsPage() {
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">Order Status Chart</h2>
+            <Bar data={orderStatusData} options={chartOptions} />
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">Payment Status Chart</h2>
+            <Pie data={paymentStatusData} options={chartOptions} />
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6 lg:col-span-2">
+            <h2 className="text-xl font-semibold mb-4">Product Status Chart</h2>
+            <div className="max-w-md mx-auto">
+              <Doughnut data={productStatusData} options={chartOptions} />
+            </div>
           </div>
         </div>
       </div>

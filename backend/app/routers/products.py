@@ -45,6 +45,13 @@ def get_products(
     products = query.offset(skip).limit(limit).all()
     return PaginatedResponse(data=products, total=total, skip=skip, limit=limit, has_more=skip + limit < total)
 
+@router.get("/{product_id}", response_model=ProductResponse)
+def get_product(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
+
 @router.post("/", response_model=ProductResponse, status_code=status.HTTP_201_CREATED)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db_product = Product(**product.dict())
@@ -52,3 +59,23 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_product)
     return db_product
+
+@router.put("/{product_id}", response_model=ProductResponse)
+def update_product(product_id: int, product: ProductCreate, db: Session = Depends(get_db)):
+    db_product = db.query(Product).filter(Product.id == product_id).first()
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    for key, value in product.dict().items():
+        setattr(db_product, key, value)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+@router.delete("/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    db_product = db.query(Product).filter(Product.id == product_id).first()
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    db.delete(db_product)
+    db.commit()
+    return {"detail": "Product deleted successfully"}
