@@ -449,9 +449,46 @@ Status: Completed
 - Admin layout with sidebar navigation
 - Dashboard page with stats cards and quick actions
 - Products management page with CRUD operations
+- Product add/edit page with image upload at `/admin/products/[id]`
 - Orders management page with status updates
+- Order detail page with shipment tracking at `/admin/orders/[id]`
 - Customers management page with table view
+- Customer detail page with order history at `/admin/customers/[id]`
 - Reports page with sales, products, customers, orders, and payment statistics
+- Reports page with Chart.js charts (order status, payment status, product status)
+- Marketplace integration page at `/admin/marketplace`
+- WhatsApp integration page at `/admin/whatsapp`
+
+
+## Toast Notifications
+
+Status: Completed
+
+- ToastContext created in `context/ToastContext.tsx`
+- showToast function with success, error, info, warning types
+- Auto-dismiss after 3 seconds
+- Integrated into admin pages for product CRUD, order updates, shipments, marketplace sync, and WhatsApp
+
+
+## Marketplace Integration
+
+Status: Completed
+
+- Backend router at `/api/marketplace`
+- GET `/api/marketplace/products` - list synced products
+- POST `/api/marketplace/sync/{product_id}` - sync product to marketplaces
+- Supported marketplaces: Tokopedia, Shopee, Lazada, Blibli
+- Admin page at `/admin/marketplace`
+
+
+## WhatsApp Integration
+
+Status: Completed
+
+- Backend router at `/api/whatsapp`
+- POST `/api/whatsapp/send/{order_id}` - send notification
+- WhatsAppService with order, payment, and shipment notification methods
+- Admin page at `/admin/whatsapp` for sending notifications
 
 
 
@@ -580,9 +617,9 @@ Branch:
 
 ## Medium Term
 
-1. Start mobile development (Flutter)
-2. Implement marketplace integration APIs
-3. Implement WhatsApp API integration
+1. Mobile development (Flutter) - postponed
+2. Marketplace integration APIs - Completed
+3. WhatsApp API integration - Completed
 
 
 
@@ -598,3 +635,4 @@ Branch:
 - Frontend running on http://localhost:3000 in development mode
 - All list endpoints use pagination with default limit of 20
 - Global exception handlers implemented for 404 and 500 errors
+
