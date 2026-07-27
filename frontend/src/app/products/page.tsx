@@ -3,12 +3,21 @@ import SearchAndFilter from "@/components/SearchAndFilter";
 import { api } from "@/lib/api";
 import { Product, Category } from "@/types";
 
-async function getProducts(skip = 0, limit = 20, search = "", filters?: any) {
+async function getProducts(skip = 0, limit = 20, search = "", category_id?: number, min_price?: number, max_price?: number, sort_by?: string) {
   try {
     let url = `/api/products?skip=${skip}&limit=${limit}`;
-    if (search) {
-      url += `&search=${encodeURIComponent(search)}`;
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (category_id) params.set("category_id", String(category_id));
+    if (min_price !== undefined) params.set("min_price", String(min_price));
+    if (max_price !== undefined) params.set("max_price", String(max_price));
+    if (sort_by) params.set("sort_by", sort_by);
+
+    const queryString = params.toString();
+    if (queryString) {
+      url += `&${queryString}`;
     }
+
     const response = await api.get<{ data: Product[] }>(url);
     return response.data;
   } catch (error) {
@@ -30,9 +39,23 @@ async function getCategories() {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { search?: string };
+  searchParams: {
+    search?: string;
+    category_id?: string;
+    min_price?: string;
+    max_price?: string;
+    sort_by?: string;
+  };
 }) {
-  const products = await getProducts(0, 20, searchParams.search || "");
+  const products = await getProducts(
+    0,
+    20,
+    searchParams.search || "",
+    searchParams.category_id ? Number(searchParams.category_id) : undefined,
+    searchParams.min_price ? Number(searchParams.min_price) : undefined,
+    searchParams.max_price ? Number(searchParams.max_price) : undefined,
+    searchParams.sort_by
+  );
   const categories = await getCategories();
 
   return (

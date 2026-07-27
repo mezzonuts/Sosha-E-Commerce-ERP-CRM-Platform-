@@ -5,7 +5,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from app.database.session import engine
 from app.models.user import Base
-from app.routers import auth, products, customers, orders, mobile, inventory, payments, shipments, crm, reporting
+from app.routers import auth, products, customers, orders, mobile, inventory, payments, shipments, crm, reporting, categories
 from app.core.rate_limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 
@@ -36,6 +36,7 @@ app.include_router(payments.router)
 app.include_router(shipments.router)
 app.include_router(crm.router)
 app.include_router(reporting.router)
+app.include_router(categories.router)
 
 @app.exception_handler(404)
 async def not_found_exception_handler(request: Request, exc):
