@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { Product } from "@/types";
+import { useCart } from "@/context/CartContext";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -14,8 +17,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Link href={`/products/${product.id}`} className="group">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <Link href={`/products/${product.id}`} className="block">
         <div className="aspect-w-16 aspect-h-9 bg-gray-200 flex items-center justify-center">
           {product.image ? (
             <img
@@ -43,7 +46,16 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
         </div>
+      </Link>
+      <div className="px-4 pb-4">
+        <button
+          onClick={() => addToCart(product)}
+          disabled={product.stock === 0}
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }

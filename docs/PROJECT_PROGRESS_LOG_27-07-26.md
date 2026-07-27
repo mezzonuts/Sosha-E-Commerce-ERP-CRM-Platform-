@@ -318,10 +318,20 @@ frontend/
 
 ## Components
 
-Status: In Progress
+Status: Completed
 
-- Navbar with navigation links
-- ProductCard for product display
+- CartContext created in context/CartContext.tsx
+- Cart state management with add, remove, update quantity, clear
+- Cart item count and total price calculations
+
+
+
+## Components
+
+Status: Completed
+
+- Navbar with navigation links and cart item count badge
+- ProductCard for product display with Add to Cart button
 - API client configured for backend communication
 - TypeScript types defined for all API responses
 
@@ -334,7 +344,8 @@ Status: In Progress
 - Home page with featured products
 - Products listing page
 - Product detail page
-- Cart page (placeholder)
+- Cart page with quantity controls and remove items
+- Checkout page with shipping form and order summary
 - Orders page (placeholder)
 - Login page (placeholder)
 

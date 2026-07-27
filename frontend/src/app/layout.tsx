@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { CartProvider } from "@/context/CartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex-1 bg-gray-50">{children}</main>
+        <CartProvider>
+          <Navbar />
+          <main className="flex-1 bg-gray-50">{children}</main>
+        </CartProvider>
         <footer className="bg-gray-800 text-white py-6">
           <div className="max-w-7xl mx-auto px-4 text-center">
             <p>  Sosha E-Commerce ERP CRM Platform</p>
