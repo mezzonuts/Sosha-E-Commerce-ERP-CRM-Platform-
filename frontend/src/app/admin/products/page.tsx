@@ -5,11 +5,13 @@ import AdminLayout from "@/app/admin/layout";
 import { api } from "@/lib/api";
 import { Product, Category } from "@/types";
 import Link from "next/link";
+import { useToast } from "@/context/ToastContext";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     fetchProducts();
@@ -41,8 +43,10 @@ export default function AdminProductsPage() {
     try {
       await api.delete(`/api/products/${id}`);
       fetchProducts();
+      showToast("Product deleted successfully", "success");
     } catch (error) {
       console.error("Failed to delete product:", error);
+      showToast("Failed to delete product", "error");
     }
   };
 

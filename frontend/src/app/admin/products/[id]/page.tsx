@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AdminLayout from "@/app/admin/layout";
 import { api } from "@/lib/api";
 import { Product, Category } from "@/types";
+import { useToast } from "@/context/ToastContext";
 
 export default function ProductFormPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function ProductFormPage({ params }: { params: { id: string } }) 
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [error, setError] = useState("");
+  const { showToast } = useToast();
 
   useEffect(() => {
     fetchCategories();
@@ -93,14 +95,17 @@ export default function ProductFormPage({ params }: { params: { id: string } }) 
 
       if (isEditing) {
         await api.put(`/api/products/${params.id}`, payload);
+        showToast("Product updated successfully", "success");
       } else {
         await api.post("/api/products", payload);
+        showToast("Product created successfully", "success");
       }
 
       router.push("/admin/products");
     } catch (error) {
       setError("Failed to save product. Please try again.");
       console.error("Failed to save product:", error);
+      showToast("Failed to save product", "error");
     } finally {
       setSaving(false);
     }
