@@ -1,0 +1,9 @@
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+test.db
+migrations/versions/*.pyc
+.git
+.gitignore
+README.md

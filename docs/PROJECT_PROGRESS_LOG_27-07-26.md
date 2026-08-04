@@ -615,6 +615,37 @@ Branch:
 3. Implement input sanitization and rate limiting
 
 
+## Infrastructure & DevOps
+
+Status: Completed
+
+- Docker Compose setup with 4 services:
+  - PostgreSQL 16 on port 5432
+  - Redis 7 on port 6379
+  - pgAdmin on port 5050
+  - Backend API on port 8000
+  - Frontend on port 3000
+- Backend Dockerfile with Python 3.12-slim
+- Frontend Dockerfile with multi-stage build (Node 20 Alpine)
+- Volume persistence for postgres_data and redis_data
+- Environment variables configured for service communication
+
+## CI/CD Pipeline
+
+Status: Completed
+
+- GitHub Actions workflow at `.github/workflows/ci-cd.yml`
+- Triggers on push to main/develop/feature/* and pull requests
+- Jobs:
+  - `test-backend`: Runs pytest with PostgreSQL service, uploads coverage to Codecov
+  - `test-frontend`: Runs npm ci, lint, and build
+  - `docker-build`: Builds and pushes Docker images to Docker Hub (on non-PR)
+  - `deploy-staging`: Deploys to staging on push to develop
+  - `deploy-production`: Deploys to production on push to main
+- Docker layer caching enabled for faster builds
+- Secrets required: DOCKER_USERNAME, DOCKER_PASSWORD
+
+
 ## Medium Term
 
 1. Mobile development (Flutter) - postponed

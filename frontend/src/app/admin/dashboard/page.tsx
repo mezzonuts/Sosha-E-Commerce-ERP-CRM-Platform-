@@ -1,4 +1,5 @@
 import AdminLayout from "@/app/admin/layout";
+import Link from "next/link";
 import { api } from "@/lib/api";
 
 async function getDashboardStats() {

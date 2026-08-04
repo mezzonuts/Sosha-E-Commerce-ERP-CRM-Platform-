@@ -61,15 +61,7 @@ export default async function ProductsPage({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">All Products</h1>
-      <SearchAndFilter
-        onSearch={(query) => {
-          console.log("Search:", query);
-        }}
-        onFilter={(filters) => {
-          console.log("Filters:", filters);
-        }}
-        categories={categories}
-      />
+      <SearchAndFilter categories={categories} />
       {products.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">No products available at the moment.</p>
