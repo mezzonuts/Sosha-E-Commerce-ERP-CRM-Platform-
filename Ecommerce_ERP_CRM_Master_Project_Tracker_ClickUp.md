@@ -69,7 +69,7 @@
   - [ ] Category management
   - [ ] Product image upload
 - [ ] Customer API
-- [ ] Cart API
+- [x] Cart API
 - [ ] Order API
   - [ ] Create order
   - [ ] Update status

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, Text, ForeignKey, Enum
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database.session import Base
 import enum
@@ -125,3 +126,23 @@ class MarketplaceSync(Base):
     marketplace = Column(String(100))
     product_id = Column(Integer, ForeignKey("products.id"))
     sync_status = Column(String(50), default="pending")
+
+class CartItem(Base):
+    __tablename__ = "cart_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cart_id = Column(Integer, ForeignKey("carts.id"))
+    product_id = Column(Integer, ForeignKey("products.id"))
+    qty = Column(Integer, nullable=False)
+    price = Column(Float, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    product = relationship("Product", backref="cart_items")
+
+class Cart(Base):
+    __tablename__ = "carts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    customer_id = Column(Integer, ForeignKey("customers.id"), unique=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    items = relationship("CartItem", backref="cart", cascade="all, delete-orphan")

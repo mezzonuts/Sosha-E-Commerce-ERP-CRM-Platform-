@@ -83,7 +83,7 @@ Backend core infrastructure, database setup, admin/ERP pages, and basic integrat
   - [x] Category management
   - [x] Product image upload
 - [x] Customer API
-- [ ] Cart API
+- [x] Cart API
 - [x] Order API
   - [x] Create order
   - [x] Update status
